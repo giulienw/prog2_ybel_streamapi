@@ -22,7 +22,7 @@ public class Main {
         // Task III: Random
 
         // Task IV+V: Resources
-        System.out.println(resources("file.txt"));
+        System.out.println(resources("streamapi/file.txt"));
     }
 
     /**
@@ -73,8 +73,11 @@ public class Main {
      * @return An open {@link InputStream} for the resource file
      */
     private static InputStream getResourceAsStream(String path) {
-        // TODO
-        throw new UnsupportedOperationException();
+        InputStream stream = Main.class.getClassLoader().getResourceAsStream(path);
+        if (stream == null) {
+            throw new IllegalArgumentException("Resource not found: " + path);
+        }
+        return stream;
     }
 
     /**
