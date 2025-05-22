@@ -91,31 +91,16 @@ public class Main {
      * @return String of all matching lines, separated by {@code "\n"}
      */
     public static String resources(String path) {
-        // TODO
-        StringBuilder result = new StringBuilder();
+        try (InputStream stream = getResourceAsStream(path);
+             BufferedReader r = new BufferedReader(new InputStreamReader(stream))) {
 
-        try (InputStream stream = getResourceAsStream(path)) {
-            BufferedReader r = new BufferedReader(new InputStreamReader(stream));
-
-            List<String> allLines = new ArrayList<>();
-
-            String newLine = r.readLine();
-            while (newLine != null) {
-                allLines.add(newLine);
-                newLine = r.readLine();
-            }
-
-            for (int i = 1; i < allLines.size(); i++) {
-                String s = allLines.get(i);
-                if (s.startsWith("a") && !(s.length() < 2)) {
-                    result.append(allLines.get(i)).append("\n");
-                }
-            }
+            return r.lines()
+                .filter(s -> s.startsWith("a") && s.length() >= 2)
+                .collect(java.util.stream.Collectors.joining("\n")) + "\n";
 
         } catch (IOException e) {
             System.err.println("Ouch, that didn't work: \n" + e.getMessage());
+            return "";
         }
-
-        return result.toString();
     }
 }
